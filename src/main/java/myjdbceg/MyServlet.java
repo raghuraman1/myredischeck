@@ -113,7 +113,7 @@ public class MyServlet extends HttpServlet {
 		String u=req.getParameter("user");
 		String p=req.getParameter("password");
 		
-		Jedis jedis = new Jedis(host, portInt,  6379, 1800);
+		Jedis jedis = new Jedis(host, portInt,  63790, 18000);
 		String auth = jedis.auth(p);
 		out.println("got auth..........."+auth+"<br/>");
 		 out.println("Server is running: "+jedis.ping());
