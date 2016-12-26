@@ -19,6 +19,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.JedisPoolConfig;
 @WebServlet("/Check")
 public class MyServlet extends HttpServlet {
 	
@@ -36,6 +38,15 @@ public class MyServlet extends HttpServlet {
 		out.println("<input name=\"user\" />");
 		out.println("</td>");
 		out.println("</tr>");*/
+		
+		out.println("<tr>");
+		out.println("<td>");
+		out.println("host");
+		out.println("</td>");
+		out.println("<td>");
+		out.println("<input name=\"db\" />");
+		out.println("</td>");
+		out.println("</tr>");
 		
 		out.println("<tr>");
 		out.println("<td>");
@@ -104,6 +115,7 @@ public class MyServlet extends HttpServlet {
 		
 		String host = req.getParameter("host");
 		String port = req.getParameter("port");
+		String db = req.getParameter("db");
 		int portInt=6379;
 		if(port!=null)
 		{
@@ -112,10 +124,12 @@ public class MyServlet extends HttpServlet {
 		//String url="jdbc:mysql://"+host+":"+port;
 		String u=req.getParameter("user");
 		String p=req.getParameter("password");
-		
-		Jedis jedis = new Jedis(host, portInt,  63790, 18000);
-		String auth = jedis.auth(p);
-		out.println("got auth..........."+auth+"<br/>");
+		JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
+		JedisPool pool = new JedisPool(jedisPoolConfig, host, portInt, 60000,
+                p);
+		Jedis jedis = pool.getResource();
+		//String auth = jedis.auth(p);
+		//out.println("got auth..........."+auth+"<br/>");
 		 out.println("Server is running: "+jedis.ping());
 		 String key="mykey";
 		 if(jedis.exists(key))
