@@ -122,7 +122,7 @@ public class MyServlet extends HttpServlet {
 			portInt=Integer.parseInt(port);
 		}
 		//String url="jdbc:mysql://"+host+":"+port;
-		String u=req.getParameter("user");
+	//	String u=req.getParameter("user");
 		String p=req.getParameter("password");
 		JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
 		JedisPool pool = new JedisPool(jedisPoolConfig, host, portInt, 60000,
@@ -134,7 +134,10 @@ public class MyServlet extends HttpServlet {
 		 String key="mykey";
 		 if(jedis.exists(key))
 		 {
-			 out.println(key+" exists");
+			 
+			 out.println("key:"+key+": exists");
+			 String value = jedis.get(key);
+			 out.println(key+" has value "+value);
 			 Long del = jedis.del(key);
 			 out.println(del+" deltetd");
 			 if(jedis.exists(key))
